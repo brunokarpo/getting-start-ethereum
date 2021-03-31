@@ -30,6 +30,35 @@ contract Tracking { // define que vamos criar um contrato chamado "Tracking"
 	// 'next()' nome da função
 	// 'public' modificador de acesso que determina o nível de visibilidade da função
 	function next() public {
+		if (currentStep == Step.Supplier) { 					//Verifica o passo atual
+			supplierState++; 									// incrementa o status do passo atual
+			if (supplierState == Finished) { 					// se o status do passo atual for finalizado
+				currentStep = Step.SupplierToFactory; 			// Troca para a proxima etapa
+			}
+			return;												// Finaliza esse processo e pronto
+		}
+		if (currentStep == Step.SupplierToFactory) {
+			supplierToFactoryState++;
+			if (supplierToFactoryState == Finished) {
+				currentStep = Step.Factory;
+			}
+			return;
+		}
+		if (currentStep == Step.Factory) {
+			factoryState++;
+			if (factoryState == Finished) {
+				currentStep = Step.FactoryToStore;
+			}
+			return;
+		}
+		if (currentStep == Step.FactoryToStore) {
+			if (factoryToStoreState == Finished) {
+				revert("Process is already finished");			// Finaliza o processo dando um erro para o usuário informando que não é possível trocar os status do step
+			}
+			factoryToStoreState++;
+			return;
+		}
+
 
 	}
 
